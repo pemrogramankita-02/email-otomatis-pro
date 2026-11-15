@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="id"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#17191d"><meta name="description" content="Email Otomatis PRO">
+<title>Email Otomatis PRO</title><link rel="manifest" href="./manifest.webmanifest"><link rel="icon" href="./icon.svg"><link rel="stylesheet" href="./styles.css">
+</head><body>
+<header class="top"><div class="logo">✉</div><div><b>Email Otomatis <em>PRO</em></b><small>Pengelolaan email lebih mudah</small></div><button id="refresh" class="icon">↻</button></header>
+<div class="wrap"><aside class="side">
+<button data-page="dashboard" class="active">▦ Dashboard</button><button data-page="compose">✎ Buat Email</button><button data-page="contacts">♙ Kontak</button><button data-page="schedules">◷ Jadwal</button><button data-page="templates">▤ Template</button><button data-page="history">☷ Riwayat</button><button data-page="settings">⚙ Pengaturan</button>
+</aside><main>
+<div id="status" class="status">Backend belum dihubungkan. Atur URL Apps Script di Pengaturan.</div>
+<section id="dashboard" class="page active"><div class="heading"><div><small>RINGKASAN</small><h1>Dashboard</h1><p>Pantau aktivitas email Anda.</p></div><button data-go="compose" class="primary">＋ Buat Email</button></div>
+<div class="stats"><article><small>Email terkirim</small><b id="sentCount">0</b></article><article><small>Jadwal menunggu</small><b id="scheduleCount">0</b></article><article><small>Total kontak</small><b id="contactCount">0</b></article><article><small>Email gagal</small><b id="failedCount">0</b></article></div>
+<div class="panel"><h2>Aktivitas terbaru</h2><div id="recent" class="empty">Belum ada aktivitas.</div></div>
+<div class="notice"><b>Informasi</b><p>Pengiriman mengikuti kuota Gmail dan batas Google Apps Script. Gunakan hanya untuk penerima yang telah memberikan izin.</p></div></section>
+<section id="compose" class="page"><div class="heading"><div><small>PESAN BARU</small><h1>Buat Email</h1><p>Kirim email sekarang atau jadwalkan.</p></div></div>
+<form id="composeForm" class="panel">
+<label>Penerima *<textarea id="to" required rows="2" placeholder="alamat@email.com, penerima@email.com"></textarea><small>Pisahkan alamat dengan koma. Bisa juga memilih kontak.</small></label>
+<button type="button" id="pick" class="secondary">Pilih dari kontak</button>
+<label>CC<input id="cc" placeholder="Opsional"></label><label>BCC<input id="bcc" placeholder="Opsional"></label>
+<label>Subjek *<input id="subject" required maxlength="200"></label>
+<label>Isi email *<textarea id="body" required rows="8" placeholder="Gunakan {{nama}} dan {{email}} untuk personalisasi."></textarea><small>Variabel tersedia: {{nama}} dan {{email}}.</small></label>
+<label class="check"><input id="html" type="checkbox"> Isi pesan menggunakan HTML</label>
+<label>Waktu pengiriman (kosongkan untuk kirim sekarang)<input id="sendAt" type="datetime-local"></label>
+<div class="actions"><button class="primary" type="submit" id="send">Kirim Email</button><button class="secondary" type="reset">Kosongkan</button></div><p id="composeMsg" class="feedback"></p></form></section>
+<section id="contacts" class="page"><div class="heading"><div><small>DAFTAR PENERIMA</small><h1>Kontak</h1><p>Kelola dan impor kontak CSV.</p></div></div>
+<div class="panel"><h2>Tambah kontak</h2><form id="contactForm" class="grid"><label>Nama<input id="cname" required></label><label>Email<input id="cemail" type="email" required></label><button class="primary">Simpan Kontak</button></form></div>
+<div class="panel"><h2>Impor kontak CSV</h2><p>Gunakan kolom nama,email. Dari Excel, simpan terlebih dahulu sebagai CSV UTF-8.</p><input type="file" id="csv" accept=".csv"><button id="import" class="secondary">Impor CSV</button><p id="importMsg" class="feedback"></p></div>
+<div class="panel"><h2>Daftar kontak</h2><div id="contactsList" class="empty">Belum ada kontak.</div></div></section>
+<section id="schedules" class="page"><div class="heading"><div><small>PENGIRIMAN OTOMATIS</small><h1>Jadwal Email</h1><p>Jadwal tertunda dan status pengiriman.</p></div></div><div class="panel"><div class="notice">Pengiriman berulang berbasis tanggal dapat diatur di lembar Google Sheets setelah jadwal pertama dibuat. Pemicu Apps Script memeriksa jadwal setiap menit; waktu aktual dapat sedikit berbeda.</div><div id="schedulesList" class="empty">Belum ada jadwal.</div></div></section>
+<section id="templates" class="page"><div class="heading"><div><small>PESAN SIAP PAKAI</small><h1>Template</h1><p>Simpan pesan untuk digunakan kembali.</p></div></div>
+<div class="panel"><form id="templateForm"><label>Nama template<input id="tname" required></label><label>Subjek<input id="tsubject" required></label><label>Isi<textarea id="tbody" rows="5" required></textarea></label><button class="primary">Simpan Template</button></form></div><div class="panel"><h2>Template tersimpan</h2><div id="templatesList" class="empty">Belum ada template.</div></div></section>
+<section id="history" class="page"><div class="heading"><div><small>CATATAN PENGIRIMAN</small><h1>Riwayat</h1><p>Status email terkirim dan gagal.</p></div><button id="export" class="secondary">Ekspor CSV</button></div><div class="panel"><div id="historyList" class="empty">Belum ada riwayat.</div></div></section>
+<section id="settings" class="page"><div class="heading"><div><small>KONFIGURASI</small><h1>Pengaturan</h1><p>Hubungkan aplikasi dengan Google Apps Script.</p></div></div>
+<div class="panel"><h2>URL backend</h2><p>Masukkan URL Web App Apps Script yang berakhiran /exec.</p><label>URL Google Apps Script<input id="backend" type="url" placeholder="https://script.google.com/macros/s/.../exec"></label><div class="actions"><button id="save" class="primary">Simpan</button><button id="test" class="secondary">Uji Koneksi</button></div><p id="settingsMsg" class="feedback"></p></div>
+<div class="panel"><h2>Notifikasi</h2><p>Notifikasi status ditampilkan di aplikasi. Notifikasi sistem Android bergantung pada izin browser dan dukungan perangkat.</p><button id="notify" class="secondary">Aktifkan Notifikasi Browser</button></div>
+<div class="panel"><h2>Versi aplikasi</h2><p>Email Otomatis PRO · PWA 1.0</p></div></section>
+</main></div>
+<nav class="bottom"><button data-page="dashboard">▦<small>Beranda</small></button><button data-page="compose">✎<small>Buat</small></button><button data-page="contacts">♙<small>Kontak</small></button><button data-page="schedules">◷<small>Jadwal</small></button><button data-page="history">☷<small>Riwayat</small></button></nav>
+<div id="toast" class="toast"></div><dialog id="picker"><h2>Pilih kontak</h2><button id="closePicker" class="secondary">Tutup</button><div id="pickerList"></div><button id="applyPicker" class="primary">Gunakan pilihan</button></dialog>
+<script src="./app.js"></script><script>if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});</script>
+</body></html>
